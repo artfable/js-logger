@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logger Demo</title>
+</head>
+<body>
+    <script type="module">
+        import Logger, { commonLogger as logger } from './logger.js';
+
+        logger.info('test');
+        logger.log('test');
+
+        let log = new Logger('test', 'trace');
+
+		log.info('test');
+		log.log('test');
+    </script>
+</body>
+</html>

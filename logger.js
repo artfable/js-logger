@@ -5,15 +5,69 @@
  */
 
 /**
- * Уровни error и trace выводят stacktrace. Для вывода действий использовать log, а не info.
- * В случае если консоль не проинициализирована (IE fix) устанавливает level = 0, тем самым отлючая вывод в консоль
+ * Levels are the same as for the usual console.
  */
+class Logger {
+	constructor(name, level) {
+		level = level ? level : 'info';
+		name = name ? name : 'common';
+		this._name = name;
+		this.applyLogLevel(level);
+	}
 
-function Logger(name, level) {
-	level = level ? level : 'info';
-	name = name ? name : 'common';
-	this._name = name;
-	this.applyLogLevel(level);
+	print(msg, level) {
+		if (typeof msg === 'string') {
+			msg = '[' + this._name + '] ' + msg;
+		}
+		if (level.id <= Logger.prototype._loggersLevels[this._name].id) {
+			if (console[level.name]) {
+				console[level.name](msg);
+			}
+		}
+	}
+
+	error(msg) {
+		this.print(msg, this._levels.error);
+	}
+
+	warn(msg) {
+		this.print(msg, this._levels.warning);
+	}
+
+	info(msg) {
+		this.print(msg, this._levels.info);
+	}
+
+	log(msg) {
+		this.print(msg, this._levels.log);
+	}
+
+	debug(msg) {
+		this.print(msg, this._levels.debug);
+	}
+
+	trace(msg) {
+		this.print(msg, this._levels.trace);
+	}
+
+
+	applyLogLevel(logLevel, name) {
+		name = name ? name : this._name;
+		if (window.console === undefined) {
+			// in case if MS still has that problem
+			Logger.prototype._loggersLevels[name] = {id: 0, name: 'off'};
+			return;
+		}
+		if (logLevel) {
+			Logger.prototype._loggersLevels[name] = Logger.prototype._levels[logLevel];
+			if (Logger.prototype._loggersLevels[name]) {
+				this.log('log level for "' + name + '" set to "' + logLevel + '"');
+			} else {
+				Logger.prototype._loggersLevels[name] = Logger.prototype._levels.info;
+				logger.error('invalid log level "' + logLevel + '", set to "' + Logger.prototype._levels.info.name + '"');
+			}
+		}
+	}
 }
 
 Logger.prototype._loggersLevels = {};
@@ -26,50 +80,6 @@ Logger.prototype._levels = {
 	debug: {id: 5, name: 'debug'},
 	trace: {id: 6, name: 'trace'}
 };
-Logger.prototype.print = function(msg, level) {
-	if (typeof msg === 'string') {
-		msg = '[' + this._name + '] ' + msg;
-	}
-	if (level.id <= Logger.prototype._loggersLevels[this._name].id) {
-		if (console[level.name]) {
-			console[level.name](msg);
-		}
-	}
-};
-Logger.prototype.error = function(msg) {
-	this.print(msg, this._levels.error);
-};
-Logger.prototype.warn = function(msg) {
-	this.print(msg, this._levels.warning);
-};
-Logger.prototype.info = function(msg) {
-	this.print(msg, this._levels.info);
-};
-Logger.prototype.log = function(msg) {
-	this.print(msg, this._levels.log);
-};
-Logger.prototype.debug = function(msg) {
-	this.print(msg, this._levels.debug);
-};
-Logger.prototype.trace = function(msg) {
-	this.print(msg, this._levels.trace);
-};
 
-Logger.prototype.applyLogLevel = function(logLevel, name) {
-	name = name ? name : this._name;
-	if (window.console === undefined) {
-		Logger.prototype._loggersLevels[name] = {id: 0, name: 'off'};
-		return;
-	}
-	if (logLevel) {
-		Logger.prototype._loggersLevels[name] = Logger.prototype._levels[logLevel];
-		if (Logger.prototype._loggersLevels[name]) {
-			this.log('log level for "' + name + '" set to "' + logLevel + '"');
-		} else {
-			Logger.prototype._loggersLevels[name] = Logger.prototype._levels.info;
-			logger.error('invalid log level "' + logLevel + '", set to "' + Logger.prototype._levels.info.name + '"');
-		}
-	}
-};
-
-window.logger = new Logger();
+export let commonLogger = new Logger();
+export default Logger;

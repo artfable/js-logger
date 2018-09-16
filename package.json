@@ -1,0 +1,15 @@
+{
+	"name": "@artfable/js-logger",
+	"version": "1.0.1",
+	"description": "Simple wrapper for console, can be used without any dependencies.",
+	"main": "logger.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/artfable/js-logger.git"
+	},
+	"author": "artfable",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	}
+}

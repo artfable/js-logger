@@ -1,7 +1,7 @@
-# Logger (version 0.0.1)
+# Logger
 Extracted from [artfable/backbone-improvement](https://github.com/artfable/backbone-improvement)
  
-Simple wrapper for console, can be used without any dependencies. Can be used safely in IE.
+Simple wrapper for console, can be used without any dependencies.
 Set common logger to `window.logger`. For create named logger use `new Logger(name)`.
 
 ### constructor `new Logger([name] [, level])` *default: name = 'common', level = 'info'*
@@ -13,3 +13,10 @@ Set a level for logs (levels are the same as in `window.console`).
 **Example:**
 
 	window.logger.applyLogLevel('debug');
+
+
+## Install
+
+Available [through npm](https://www.npmjs.com/package/@artfable/js-logger)
+
+    npm i @artfable/js-logger
